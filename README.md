@@ -9,7 +9,7 @@ TODO: Write a description here
    ```yaml
    dependencies:
      libsql:
-       github: garymardell/libsql
+       github: dev-transparent/libsql
    ```
 
 2. Run `shards install`
