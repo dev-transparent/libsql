@@ -1,0 +1,17 @@
+name: libsql
+version: 0.1.0
+
+authors:
+  - Gary Mardell <info@garymardell.co.uk>
+
+crystal: '>= 1.14.0'
+
+dependencies:
+  db:
+    github: crystal-lang/crystal-db
+    version: ~> 0.13.0
+
+scripts:
+  postinstall: "cargo build --manifest-path=libsql-c/Cargo.toml --release --target-dir=.target/"
+
+license: MIT
