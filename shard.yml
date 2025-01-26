@@ -12,6 +12,6 @@ dependencies:
     version: ~> 0.13.0
 
 scripts:
-  postinstall: "cargo build --manifest-path=libsql-c/Cargo.toml --release --target-dir=.target/"
+  postinstall: "cd libsql-c && cargo build --release --target-dir=../.target/"
 
 license: MIT
