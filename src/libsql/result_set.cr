@@ -127,7 +127,7 @@ module Libsql
     end
 
     def column_count : Int32
-      LibSQL.libsql_statement_column_count(self)
+      LibSQL.libsql_statement_column_count(self).to_i32
     end
 
     protected def libsql_statement
