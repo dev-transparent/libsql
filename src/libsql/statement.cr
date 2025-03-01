@@ -22,7 +22,7 @@ module Libsql
       bind_args(args)
 
       result = Libsql.check LibSQL.libsql_statement_execute(self)
-      info = Libsql.check LibSQL.libsql_connection_info(connection)
+      info = Libsql.check LibSQL.libsql_connection_info(connection.to_unsafe)
 
       DB::ExecResult.new result.rows_changed.to_i64, info.last_inserted_rowid
     end
