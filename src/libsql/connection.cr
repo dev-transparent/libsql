@@ -6,8 +6,10 @@ module Libsql
       def self.from_uri(uri : URI, default = Options.new)
         params = HTTP::Params.parse(uri.query || "")
 
+        scheme = uri.scheme == "libsql" ? "http" : "https"
+
         Options.new(
-          url: "#{uri.scheme}://#{uri.host}",
+          url: "#{scheme}://#{uri.host}:#{uri.port}",
           auth_token: params.fetch("auth_token", default.auth_token)
         )
       end

@@ -17,3 +17,4 @@ module Libsql
 end
 
 DB.register_driver "libsql", Libsql::Driver
+DB.register_driver "libsqls", Libsql::Driver

@@ -5,9 +5,11 @@ module Libsql
     def initialize(connection, command)
       super(connection, command)
 
-      pp command
+      @statement = Libsql.check LibSQL.libsql_connection_prepare(conn, command)
+    end
 
-      @statement = Libsql.check LibSQL.libsql_connection_prepare(connection, command)
+    private def conn
+      connection.as(Libsql::Connection)
     end
 
     protected def perform_query(args : Enumerable) : DB::ResultSet
@@ -22,7 +24,7 @@ module Libsql
       bind_args(args)
 
       result = Libsql.check LibSQL.libsql_statement_execute(self)
-      info = Libsql.check LibSQL.libsql_connection_info(connection.to_unsafe)
+      info = Libsql.check LibSQL.libsql_connection_info(conn)
 
       DB::ExecResult.new result.rows_changed.to_i64, info.last_inserted_rowid
     end
