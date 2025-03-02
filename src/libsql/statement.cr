@@ -45,6 +45,8 @@ module Libsql
       case arg
       when Int
         LibSQL.libsql_integer(arg.to_i64)
+      when Bool
+        LibSQL.libsql_integer(arg ? 1u64 : 0u64)
       when Float
         LibSQL.libsql_real(arg.to_f64)
       when String

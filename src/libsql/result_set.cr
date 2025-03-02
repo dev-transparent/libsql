@@ -1,12 +1,10 @@
 module Libsql
   class ResultSet < DB::ResultSet
     @column_index = 0
-    @row : LibSQL::Row
+    @row : LibSQL::Row? = nil
 
     def initialize(statement : Statement, @rows : LibSQL::Rows)
       super(statement)
-
-      @row = Libsql.check LibSQL.libsql_rows_next(@rows)
     end
 
     protected def do_close
@@ -18,7 +16,7 @@ module Libsql
       @column_index = 0
       @row = Libsql.check LibSQL.libsql_rows_next(@rows)
 
-      !LibSQL.libsql_row_empty(@row)
+      !LibSQL.libsql_row_empty(@row.not_nil!)
     end
 
     def next_column_index : Int32
@@ -145,7 +143,7 @@ module Libsql
       when LibSQL::Type::LIBSQL_TYPE_REAL
         value.value.real
       when LibSQL::Type::LIBSQL_TYPE_TEXT
-        String.new(value.value.text.ptr, value.value.text.len)
+        String.new(value.value.text.ptr, value.value.text.len - 1) # Null byte is included in the length
       when LibSQL::Type::LIBSQL_TYPE_BLOB
         Bytes.new(value.value.blob.ptr, value.value.blob.len)
       when LibSQL::Type::LIBSQL_TYPE_NULL
