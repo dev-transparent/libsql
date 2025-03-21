@@ -1,4 +1,8 @@
-@[Link(lib: "libsql", ldflags: "-L#{__DIR__}/../.target/release")]
+{% if flag?(:darwin) %}
+  @[Link(ldflags: "#{__DIR__}/../.target/release/liblibsql.dylib")]
+{% else %}
+  @[Link(ldflags: "#{__DIR__}/../.target/release/liblibsql.so")]
+{% end %}
 lib LibSQL
   enum Cypher
     LIBSQL_CYPHER_DEFAULT
