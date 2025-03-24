@@ -35,6 +35,10 @@ module Libsql
           arg.each do |name, arg|
             Libsql.check LibSQL.libsql_statement_bind_named(self, name, convert(arg))
           end
+        elsif arg.is_a?(Array)
+          arg.each do |arg|
+            Libsql.check LibSQL.libsql_statement_bind_value(self, convert(arg))
+          end
         else
           Libsql.check LibSQL.libsql_statement_bind_value(self, convert(arg))
         end
