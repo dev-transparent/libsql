@@ -2,7 +2,10 @@ module Libsql
   class Connection < DB::Connection
     record Options,
       url : String? = nil,
-      auth_token : String? = nil do
+      path : String? = nil,
+      auth_token : String? = nil,
+      encryption_key : String? = nil,
+      sync_interval : UInt64? = nil do
       def self.from_uri(uri : URI, default = Options.new)
         params = HTTP::Params.parse(uri.query || "")
 
@@ -10,7 +13,10 @@ module Libsql
 
         Options.new(
           url: "#{scheme}://#{uri.host}:#{uri.port}",
-          auth_token: params.fetch("auth_token", default.auth_token)
+          path: params.fetch("path", default.path),
+          auth_token: params.fetch("auth_token", default.auth_token),
+          encryption_key: params.fetch("encryption_key", default.encryption_key),
+          sync_interval: params.fetch("sync_interval", default.sync_interval).try &.to_u64,
         )
       end
     end
@@ -23,8 +29,26 @@ module Libsql
       super(options)
 
       @desc = LibSQL::DatabaseDesc.new
-      @desc.url = libsql_options.url.not_nil!
-      @desc.auth_token = libsql_options.auth_token.not_nil!
+
+      if url = libsql_options.url
+        @desc.url = url
+      end
+
+      if path = libsql_options.path
+        @desc.path = path
+      end
+
+      if auth_token = libsql_options.auth_token
+        @desc.auth_token = auth_token
+      end
+
+      if encryption_key = libsql_options.encryption_key
+        @desc.encryption_key = encryption_key
+      end
+
+      if sync_interval = libsql_options.sync_interval
+        @desc.sync_interval = sync_interval
+      end
 
       @db = Libsql.check LibSQL.libsql_database_init(@desc)
       @conn = Libsql.check LibSQL.libsql_database_connect(@db)
